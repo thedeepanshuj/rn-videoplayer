@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, Button, View, TouchableOpacity} from 'react-native';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -21,12 +21,16 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <View style={styles.welcome}><Button title="Play Online" onPress={ () => buttonClicked("online-button")}/></View>
+        <View style={styles.welcome}><Button title="Save Offline" onPress={ () => buttonClicked("download-button")}/></View>
+        <View style={styles.welcome}><Button title="Play Offline" onPress={ () => buttonClicked("offline-button")}/></View>
       </View>
     );
   }
+}
+
+function buttonClicked(message) {
+  console.log(message)
 }
 
 const styles = StyleSheet.create({
@@ -40,6 +44,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
+      alignItems: 'stretch'
   },
   instructions: {
     textAlign: 'center',
