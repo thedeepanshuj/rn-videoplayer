@@ -1,5 +1,6 @@
 package com.vdocipherdemo.play_online;
 
+import android.content.Intent;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -22,6 +23,9 @@ public class PlayOnlineModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void play() {
         Toast.makeText(getReactApplicationContext(), MODULE_ONLINE, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getReactApplicationContext(), PlayOnlineActivity.class);
+        getReactApplicationContext().startActivity(intent);
+
     }
 
 
