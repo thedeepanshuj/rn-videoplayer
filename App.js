@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, Button, View, TouchableOpacity} from 'react-native';
+import {Platform, StyleSheet, Button, View, NativeModules} from 'react-native';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -21,12 +21,16 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.welcome}><Button title="Play Online" onPress={ () => buttonClicked("online-button")}/></View>
+        <View style={styles.welcome}><Button title="Play Online" onPress={ () => onlineButtonClicked("online-button")}/></View>
         <View style={styles.welcome}><Button title="Save Offline" onPress={ () => buttonClicked("download-button")}/></View>
         <View style={styles.welcome}><Button title="Play Offline" onPress={ () => buttonClicked("offline-button")}/></View>
       </View>
     );
   }
+}
+
+function onlineButtonClicked(message){
+  NativeModules.PlayOnlineModule.play();
 }
 
 function buttonClicked(message) {
