@@ -1,7 +1,9 @@
-package com.vdocipherdemo.play_online;
+package com.vdocipherdemo.shared_components.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.vdocipher.aegis.media.ErrorDescription;
 import com.vdocipher.aegis.media.Track;
@@ -10,12 +12,13 @@ import com.vdocipher.aegis.player.VdoPlayerFragment;
 import com.vdocipherdemo.Constants;
 import com.vdocipherdemo.R;
 
-public class PlayOnlineActivity extends AppCompatActivity implements VdoPlayer.InitializationListener {
+public class PlayerActivity extends AppCompatActivity implements VdoPlayer.InitializationListener {
 
     private VdoPlayerFragment playerFragment;
     private VdoPlayer player;
     private String mOtp;
     private String mPlaybackInfo;
+    private String playType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +28,11 @@ public class PlayOnlineActivity extends AppCompatActivity implements VdoPlayer.I
         mOtp = Constants.OTP;
         mPlaybackInfo = Constants.PLAYBACK_INFO;
 
+        Intent intent = getIntent();
+        playType = intent.getStringExtra(Constants.PLAY_TYPE);
+
         playerFragment = (VdoPlayerFragment) getFragmentManager().findFragmentById(R.id.online_player_fragment);
-        playerFragment.initialize(PlayOnlineActivity.this);
+        playerFragment.initialize(PlayerActivity.this);
     }
 
     @Override
@@ -34,7 +40,16 @@ public class PlayOnlineActivity extends AppCompatActivity implements VdoPlayer.I
         this.player = vdoPlayer;
         this.player.addPlaybackEventListener(playbackEventListener);
 
-        VdoPlayer.VdoInitParams vdoParams = VdoPlayer.VdoInitParams.createParamsWithOtp(mOtp, mPlaybackInfo);
+        VdoPlayer.VdoInitParams vdoParams;
+        if (this.playType.equals(Constants.PLAY_ONLINE)) {
+            vdoParams = VdoPlayer.VdoInitParams.createParamsWithOtp(mOtp, mPlaybackInfo);
+        } else if (this.playType.equals(Constants.PLAY_OFFLINE)) {
+            vdoParams = VdoPlayer.VdoInitParams.createParamsForOffline(Constants.MEDIA_ID);
+        } else {
+            Toast.makeText(getApplicationContext(), "No PlayType selected", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         player.load(vdoParams);
 
     }

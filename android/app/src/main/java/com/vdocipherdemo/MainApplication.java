@@ -7,6 +7,8 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.vdocipherdemo.play_offline.PlayOfflinePackage;
+import com.vdocipherdemo.save_offline.SaveOfflinePackage;
 import com.vdocipherdemo.play_online.PlayOnlinePackage;
 
 import java.util.Arrays;
@@ -24,7 +26,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
-              new PlayOnlinePackage()
+              new PlayOnlinePackage(),
+              new SaveOfflinePackage(),
+              new PlayOfflinePackage()
       );
     }
 

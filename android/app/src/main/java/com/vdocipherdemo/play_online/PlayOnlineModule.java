@@ -6,14 +6,16 @@ import android.widget.Toast;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.vdocipherdemo.Constants;
+import com.vdocipherdemo.shared_components.activities.PlayerActivity;
 
 public class PlayOnlineModule extends ReactContextBaseJavaModule {
 
-    public final static String MODULE_ONLINE = "PlayOnlineModule";
+    private final static String MODULE_PLAY_ONLINE = "PlayOnlineModule";
 
     @Override
     public String getName() {
-        return MODULE_ONLINE;
+        return MODULE_PLAY_ONLINE;
     }
 
     public PlayOnlineModule(ReactApplicationContext reactContext) {
@@ -22,8 +24,9 @@ public class PlayOnlineModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void play() {
-        Toast.makeText(getReactApplicationContext(), MODULE_ONLINE, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getReactApplicationContext(), PlayOnlineActivity.class);
+        Toast.makeText(getReactApplicationContext(), MODULE_PLAY_ONLINE, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getReactApplicationContext(), PlayerActivity.class);
+        intent.putExtra(Constants.PLAY_TYPE, Constants.PLAY_ONLINE);
         getReactApplicationContext().startActivity(intent);
 
     }

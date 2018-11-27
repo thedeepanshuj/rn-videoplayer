@@ -21,20 +21,24 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.welcome}><Button title="Play Online" onPress={ () => onlineButtonClicked("online-button")}/></View>
-        <View style={styles.welcome}><Button title="Save Offline" onPress={ () => buttonClicked("download-button")}/></View>
-        <View style={styles.welcome}><Button title="Play Offline" onPress={ () => buttonClicked("offline-button")}/></View>
+        <View style={styles.welcome}><Button title="Play Online" onPress={ () => playOnlineButtonClicked()}/></View>
+        <View style={styles.welcome}><Button title="Save Offline" onPress={ () => saveOfflineButtonClicked()}/></View>
+        <View style={styles.welcome}><Button title="Play Offline" onPress={ () => playOfflineButtonClicked()}/></View>
       </View>
     );
   }
 }
 
-function onlineButtonClicked(message){
+function playOnlineButtonClicked(){
   NativeModules.PlayOnlineModule.play();
 }
 
-function buttonClicked(message) {
-  console.log(message)
+function saveOfflineButtonClicked() {
+  NativeModules.SaveOfflineModule.download();
+}
+
+function playOfflineButtonClicked() {
+  NativeModules.PlayOfflineModule.play();
 }
 
 const styles = StyleSheet.create({
