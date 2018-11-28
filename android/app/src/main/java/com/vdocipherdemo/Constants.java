@@ -10,6 +10,4 @@ public class Constants {
     public static final String PLAY_OFFLINE = "offline" ;
     public static final String PLAY_TYPE = "playType";
     public static final String PLAY_ONLINE = "online";
-    public static final String DOWNLOAD_OPTIONS = "downloadOptions";
-    public static final String TITLE = "title";
 }

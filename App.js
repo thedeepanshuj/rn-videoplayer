@@ -31,7 +31,7 @@ export default class App extends Component<Props> {
 }
 
 function playOnlineButtonClicked(){
-  NativeModules.PlayOnlineModule.play();
+  NativeModules.VdoCipherOnlineModule.play();
 }
 
 function saveOfflineButtonClicked() {

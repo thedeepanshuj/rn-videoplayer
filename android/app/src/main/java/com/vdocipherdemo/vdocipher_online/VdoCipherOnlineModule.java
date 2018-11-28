@@ -1,4 +1,4 @@
-package com.vdocipherdemo.play_online;
+package com.vdocipherdemo.vdocipher_online;
 
 import android.content.Intent;
 import android.widget.Toast;
@@ -9,16 +9,16 @@ import com.facebook.react.bridge.ReactMethod;
 import com.vdocipherdemo.Constants;
 import com.vdocipherdemo.shared_components.activities.PlayerActivity;
 
-public class PlayOnlineModule extends ReactContextBaseJavaModule {
+public class VdoCipherOnlineModule extends ReactContextBaseJavaModule {
 
-    private final static String MODULE_PLAY_ONLINE = "PlayOnlineModule";
+    private final static String MODULE_PLAY_ONLINE = "VdoCipherOnlineModule";
 
     @Override
     public String getName() {
         return MODULE_PLAY_ONLINE;
     }
 
-    public PlayOnlineModule(ReactApplicationContext reactContext) {
+    public VdoCipherOnlineModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
 
