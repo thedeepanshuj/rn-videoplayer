@@ -24,6 +24,7 @@ export default class App extends Component<Props> {
         <View style={styles.welcome}><Button title="Play Online" onPress={ () => playOnlineButtonClicked()}/></View>
         <View style={styles.welcome}><Button title="Save Offline" onPress={ () => saveOfflineButtonClicked()}/></View>
         <View style={styles.welcome}><Button title="Play Offline" onPress={ () => playOfflineButtonClicked()}/></View>
+          <View style={styles.welcome}><Button title="Delete" onPress={ () => deleteButtonClicked()}/></View>
       </View>
     );
   }
@@ -34,11 +35,15 @@ function playOnlineButtonClicked(){
 }
 
 function saveOfflineButtonClicked() {
-  NativeModules.SaveOfflineModule.download();
+  NativeModules.VdoCipherOfflineModule.download();
 }
 
 function playOfflineButtonClicked() {
-  NativeModules.PlayOfflineModule.play();
+  NativeModules.VdoCipherOfflineModule.play();
+}
+
+function deleteButtonClicked() {
+  NativeModules.VdoCipherOfflineModule.delete();
 }
 
 const styles = StyleSheet.create({

@@ -26,7 +26,6 @@
         <activity
             android:name=".shared_components.activities.PlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity android:name=".save_offline.ListDownloadOptionsActivity"></activity>
     </application>
 
 </manifest>

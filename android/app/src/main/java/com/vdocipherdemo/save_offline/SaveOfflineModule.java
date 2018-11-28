@@ -1,12 +1,9 @@
 package com.vdocipherdemo.save_offline;
 
-import android.content.Intent;
+
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -23,9 +20,6 @@ import com.vdocipher.aegis.offline.VdoDownloadManager;
 import com.vdocipherdemo.Constants;
 
 import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SaveOfflineModule extends ReactContextBaseJavaModule {

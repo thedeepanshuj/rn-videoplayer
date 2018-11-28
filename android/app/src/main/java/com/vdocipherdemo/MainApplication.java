@@ -10,6 +10,7 @@ import com.facebook.soloader.SoLoader;
 import com.vdocipherdemo.play_offline.PlayOfflinePackage;
 import com.vdocipherdemo.save_offline.SaveOfflinePackage;
 import com.vdocipherdemo.play_online.PlayOnlinePackage;
+import com.vdocipherdemo.vdocipher_offline.VdoCipherOfflinePackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +29,8 @@ public class MainApplication extends Application implements ReactApplication {
               new MainReactPackage(),
               new PlayOnlinePackage(),
               new SaveOfflinePackage(),
-              new PlayOfflinePackage()
+              new PlayOfflinePackage(),
+              new VdoCipherOfflinePackage()
       );
     }
 
