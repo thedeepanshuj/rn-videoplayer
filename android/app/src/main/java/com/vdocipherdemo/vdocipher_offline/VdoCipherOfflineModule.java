@@ -24,6 +24,8 @@ import com.vdocipherdemo.shared_components.activities.PlayerActivity;
 import java.io.File;
 import java.util.List;
 
+import static com.vdocipherdemo.Utils.isInternetAvailable;
+
 public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
 
     private static final String MODULE_VDOCIPHER = "VdoCipherOfflineModule";
@@ -35,7 +37,7 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
     private boolean isVdoDownloaded = false;
     private boolean isDownloading = false;
     private DownloadStatus caseDownloadStatus = null;
-    private boolean hasQueried = false;
+
     public VdoCipherOfflineModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
@@ -47,19 +49,8 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void delete() {
-        Toast.makeText(getReactApplicationContext(), MODULE_VDOCIPHER + " -> Delete Video", Toast.LENGTH_SHORT).show();
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             initVdoCipherAttributes(METHOD_DELETE);
-            if (isVdoDownloaded) {
-                showToast(getReactApplicationContext(), "Will delete the video");
-                vdoDownloadManager.remove(caseDownloadStatus.mediaInfo.mediaId);
-            } else if (isDownloading){
-                showToast(getReactApplicationContext(), "Video is still downloading");
-            } else {
-                showToast(getReactApplicationContext(), "Video not downloaded or already deleted");
-
-            }
         } else {
             showToast(getReactApplicationContext(),"Minimum api level required is 21");
         }
@@ -81,7 +72,7 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             initVdoCipherAttributes(METHOD_DOWNLOAD);
         } else {
-            Toast.makeText(getReactApplicationContext(),"Minimum api level required is 21", Toast.LENGTH_LONG).show();
+            showToast(getReactApplicationContext(),"Minimum api level required is 21");
         }
     }
 
@@ -90,6 +81,10 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
         if (vdoDownloadManager==null) {
             vdoDownloadManager = VdoDownloadManager.getInstance(getReactApplicationContext());
         }
+
+        isVdoDownloaded = false;
+        isDownloading = false;
+        caseDownloadStatus = null;
 
         vdoDownloadManager.query(new VdoDownloadManager.Query(), new VdoDownloadManager.QueryResultListener() {
             @Override
@@ -113,11 +108,15 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
 
     private void downloadPostQuery() {
         if (isVdoDownloaded) {
-            Toast.makeText(getReactApplicationContext(), "Vdo already saved offline", Toast.LENGTH_SHORT).show();
+            showToast(getReactApplicationContext(), "Vdo already saved offline");
         } else if (isDownloading){
-            Toast.makeText(getReactApplicationContext(), "Downloaded " + caseDownloadStatus.downloadPercent + "%", Toast.LENGTH_SHORT).show();
+            showToast(getReactApplicationContext(), "Downloading at " + caseDownloadStatus.downloadPercent + "%");
         } else {
-            Toast.makeText(getReactApplicationContext(), "Will download the video", Toast.LENGTH_SHORT).show();
+            if (!isInternetAvailable()) {
+                showToast(getReactApplicationContext(), "Check Internet connectivity");
+                return;
+            }
+            showToast(getReactApplicationContext(), "Will download the video");
             getOptions();
         }
     }
@@ -204,7 +203,7 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
         if (!(dlLocation.exists() && dlLocation.isDirectory())) {
             // directory not created yet; let's create it
             if (!dlLocation.mkdir()) {
-                Toast.makeText(getReactApplicationContext(), "failed to create storage directory", Toast.LENGTH_LONG).show();
+                showToast(getReactApplicationContext(), "failed to create storage directory");
                 return;
             }
         }
@@ -217,7 +216,7 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
         try {
             vdoDownloadManager.enqueue(request);
         } catch (IllegalArgumentException | IllegalStateException e) {
-            Toast.makeText(getReactApplicationContext(), "error enqueuing download request", Toast.LENGTH_LONG).show();
+            showToast(getReactApplicationContext(), "error enqueuing download request");
         }
     }
 
