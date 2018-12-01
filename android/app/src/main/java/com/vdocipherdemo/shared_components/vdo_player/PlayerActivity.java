@@ -1,4 +1,4 @@
-package com.vdocipherdemo.shared_components.activities;
+package com.vdocipherdemo.shared_components.vdo_player;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -16,20 +16,17 @@ public class PlayerActivity extends AppCompatActivity implements VdoPlayer.Initi
 
     private VdoPlayerFragment playerFragment;
     private VdoPlayer player;
-    private String mOtp;
-    private String mPlaybackInfo;
     private String playType;
+    private VdoInfo vdoInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_online);
-
-        mOtp = Constants.OTP;
-        mPlaybackInfo = Constants.PLAYBACK_INFO;
+        setContentView(R.layout.activity_player);
 
         Intent intent = getIntent();
         playType = intent.getStringExtra(Constants.PLAY_TYPE);
+        vdoInfo = (VdoInfo) intent.getSerializableExtra(Constants.VDO_INFO);
 
         playerFragment = (VdoPlayerFragment) getFragmentManager().findFragmentById(R.id.online_player_fragment);
         playerFragment.initialize(PlayerActivity.this);
@@ -42,9 +39,9 @@ public class PlayerActivity extends AppCompatActivity implements VdoPlayer.Initi
 
         VdoPlayer.VdoInitParams vdoParams;
         if (this.playType.equals(Constants.PLAY_ONLINE)) {
-            vdoParams = VdoPlayer.VdoInitParams.createParamsWithOtp(mOtp, mPlaybackInfo);
+            vdoParams = VdoPlayer.VdoInitParams.createParamsWithOtp(vdoInfo.getOtp(), vdoInfo.getPlaybackInfo());
         } else if (this.playType.equals(Constants.PLAY_OFFLINE)) {
-            vdoParams = VdoPlayer.VdoInitParams.createParamsForOffline(Constants.MEDIA_ID);
+            vdoParams = VdoPlayer.VdoInitParams.createParamsForOffline(vdoInfo.getMediaId());
         } else {
             Toast.makeText(getApplicationContext(), "No PlayType selected", Toast.LENGTH_SHORT).show();
             return;

@@ -6,8 +6,15 @@ import android.widget.Toast;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.vdocipherdemo.Constants;
-import com.vdocipherdemo.shared_components.activities.PlayerActivity;
+import com.vdocipherdemo.shared_components.vdo_player.PlayerActivity;
+import com.vdocipherdemo.shared_components.vdo_player.VdoInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class VdoCipherOnlineModule extends ReactContextBaseJavaModule {
 
@@ -23,10 +30,13 @@ public class VdoCipherOnlineModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void play() {
-        Toast.makeText(getReactApplicationContext(), MODULE_PLAY_ONLINE, Toast.LENGTH_SHORT).show();
+    public void play(String vdoInfoString) {
+
+        VdoInfo vdoInfo = new Gson().fromJson(vdoInfoString, VdoInfo.class);
+
         Intent intent = new Intent(getReactApplicationContext(), PlayerActivity.class);
         intent.putExtra(Constants.PLAY_TYPE, Constants.PLAY_ONLINE);
+        intent.putExtra(Constants.VDO_INFO, vdoInfo);
         getReactApplicationContext().startActivity(intent);
 
     }

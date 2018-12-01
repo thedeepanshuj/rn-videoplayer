@@ -140,7 +140,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation 'com.vdocipher.aegis:vdocipher-android:1.0.0-beta3'
+    implementation 'com.vdocipher.aegis:vdocipher-android:1.0.0-beta3' //VdoCipher SDK
+    implementation 'com.google.code.gson:gson:2.8.5' // For JSON parsing
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

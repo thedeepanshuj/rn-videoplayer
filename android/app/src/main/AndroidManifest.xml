@@ -24,7 +24,7 @@
         </activity>
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <activity
-            android:name=".shared_components.activities.PlayerActivity"
+            android:name=".shared_components.vdo_player.PlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
 
