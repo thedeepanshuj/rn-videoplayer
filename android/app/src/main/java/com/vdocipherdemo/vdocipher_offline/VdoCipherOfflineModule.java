@@ -30,7 +30,7 @@ import java.util.List;
 
 import static com.vdocipherdemo.Utils.isInternetAvailable;
 
-public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
+public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implements VdoDownloadManager.EventListener {
 
     private static final String MODULE_VDOCIPHER_OFFLINE = "VdoCipherOfflineModule";
     private static final int METHOD_DOWNLOAD = 1;
@@ -82,8 +82,10 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initVdoCipherAttributes(final int sourceMethod) {
-        if (vdoDownloadManager==null)
+        if (vdoDownloadManager==null){
             vdoDownloadManager = VdoDownloadManager.getInstance(getReactApplicationContext());
+            vdoDownloadManager.addEventListener(this);
+        }
 
         isVdoDownloaded = false;
         isDownloading = false;
@@ -92,6 +94,7 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
         vdoDownloadManager.query(new VdoDownloadManager.Query(), new VdoDownloadManager.QueryResultListener() {
             @Override
             public void onQueryResult(List<DownloadStatus> list) {
+                Toast.makeText(getReactApplicationContext(), "Testing" + sourceMethod, Toast.LENGTH_LONG).show();
                 for (DownloadStatus status: list) {
                     if(status.mediaInfo.mediaId.equals(vdoInfo.getMediaId())){
                         caseDownloadStatus = status;
@@ -255,4 +258,32 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule {
     private void showToast(Context context, String message) { Toast.makeText(context, message, Toast.LENGTH_SHORT).show(); }
 
 
+    @Override
+    public void onQueued(String s, DownloadStatus downloadStatus) {
+        showToast(getReactApplicationContext(), "Queued");
+    }
+
+    @Override
+    public void onChanged(String s, DownloadStatus downloadStatus) {
+        showToast(getReactApplicationContext(), "Downloading at " + downloadStatus.downloadPercent +" %");
+    }
+
+    @Override
+    public void onCompleted(String s, DownloadStatus downloadStatus) {
+        showToast(getReactApplicationContext(), "Download Finished");
+        vdoDownloadManager.removeEventListener(this);
+        vdoDownloadManager = null;
+    }
+
+    @Override
+    public void onFailed(String s, DownloadStatus downloadStatus) {
+        showToast(getReactApplicationContext(), "Failed : " + downloadStatus.reason);
+    }
+
+    @Override
+    public void onDeleted(String s) {
+        showToast(getReactApplicationContext(), "Deleted");
+        vdoDownloadManager.removeEventListener(this);
+        vdoDownloadManager = null;
+    }
 }
