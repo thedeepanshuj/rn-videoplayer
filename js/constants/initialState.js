@@ -1,4 +1,4 @@
-import {STATUS_NOT_DOWNLOADED} from "./download_status";
+import {STATUS_NOT_DOWNLOADED} from "./downloadStatus";
 
 const initialState = {
     medias: {

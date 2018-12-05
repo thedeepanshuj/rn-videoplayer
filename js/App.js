@@ -18,18 +18,17 @@ export default class App extends Component<Props> {
 
     constructor(props) {
         super(props);
-        this.props.mediaId = sampleVdoInfo.mediaId;
-        const store = createStore(rootReducer, initialState);
-        this.persisted = persistStore(store);
+        this.store = createStore(rootReducer, initialState);
+        this.persisted = persistStore(this.store);
     }
 
     render() {
     return (
-        <Provider>
+        <Provider store={this.store}>
             <PersistGate loading={<Text>Loading...</Text>} persistor={this.persisted}>
                 <View style={styles.container}>
-                    <PlayButtonContainer mediaId:{this.props.mediaId}/>
-                    <DownloadButtonContainer mediaId:{this.props.mediaId}/>
+                    <PlayButtonContainer mediaId={sampleVdoInfo.mediaId}/>
+                    <DownloadButtonContainer mediaId={sampleVdoInfo.mediaId}/>
                 </View>
             </PersistGate>
         </Provider>

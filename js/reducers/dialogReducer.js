@@ -1,4 +1,4 @@
-import {HIDE_DIALOG, SHOW_DIALOG} from "../constants/action_types";
+import {HIDE_DIALOG, SHOW_DIALOG} from "../constants/actionTypes";
 
 export const dialogReducer = (state = false, action) => {
 

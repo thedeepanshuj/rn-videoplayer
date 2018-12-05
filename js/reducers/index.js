@@ -13,7 +13,7 @@ const persistConfig = {
 const rootReducer = persistCombineReducers(persistConfig, {
     showDialog: dialogReducer,
     medias: mediasReducer
-})
+});
 
 export default rootReducer;
 

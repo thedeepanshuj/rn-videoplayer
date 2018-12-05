@@ -5,7 +5,7 @@ import {
     DOWNLOAD_QUEUED,
     HIDE_DIALOG,
     SHOW_DIALOG
-} from "../constants/action_types";
+} from "../constants/actionTypes";
 
 export const showDialog = () => {
     return {type: SHOW_DIALOG}
