@@ -1,7 +1,7 @@
 import {DELETE_SUCCESS, DOWNLOAD_COMPLETED, DOWNLOAD_PROGRESS, DOWNLOAD_QUEUED} from "../constants/action_types";
 import {STATUS_DOWNLOADED, STATUS_DOWNLOADING, STATUS_NOT_DOWNLOADED} from "../constants/download_status";
 
-export const download = (state = {}, action) => {
+export const mediasReducer = (state = {}, action) => {
     const mediaId = action.payload.mediaId;
     switch (action.type) {
         case DOWNLOAD_QUEUED:

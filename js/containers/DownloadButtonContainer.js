@@ -38,9 +38,9 @@ function getOnClick(mediaInfo) {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    buttonText: getButtonText(state.media[ownProps.mediaId]),
-    onClick: getOnClick(state.media[ownProps.mediaId]),
-    isDisabled: getButtonDisableStatus(state.media[ownProps.mediaId])
+    buttonText: getButtonText(state.medias[ownProps.mediaId]),
+    onClick: getOnClick(state.medias[ownProps.mediaId]),
+    isDisabled: getButtonDisableStatus(state.medias[ownProps.mediaId])
 });
 
 export default connect(mapStateToProps, null)(DownloadButton)
