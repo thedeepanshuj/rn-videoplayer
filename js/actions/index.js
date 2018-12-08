@@ -1,5 +1,5 @@
 import {
-    DELETE_SUCCESS,
+    DELETE_SUCCESS, DIALOG_VALUE_CHANGE,
     DOWNLOAD_COMPLETED, DOWNLOAD_ERROR,
     DOWNLOAD_PROGRESS,
     DOWNLOAD_QUEUED,
@@ -7,13 +7,24 @@ import {
     SHOW_DIALOG
 } from "../constants/actionTypes";
 
-export const showDialog = () => {
-    return {type: SHOW_DIALOG}
+export const showDialog = (options) => {
+
+    return {
+        type: SHOW_DIALOG,
+        payload: {...options }
+    }
 };
 
 export const hideDialog = () => {
     return {type: HIDE_DIALOG}
 };
+
+export const dialogValueChange = (payload) => {
+    return {
+        type: DIALOG_VALUE_CHANGE,
+        payload: {...payload}
+    }
+}
 
 export const downloadQueued = (mediaId) => {
     return {

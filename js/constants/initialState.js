@@ -10,7 +10,12 @@ const initialState = {
         }
 
     },
-    showDialog: false
+    dialog: {
+        visible: false,
+        downloadOptions: null,
+        downloadTracks: null,
+        selectedIndex: -1
+    }
 };
 
 export default initialState;

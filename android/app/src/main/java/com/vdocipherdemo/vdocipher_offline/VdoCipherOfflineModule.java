@@ -94,7 +94,6 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
         vdoDownloadManager.query(new VdoDownloadManager.Query(), new VdoDownloadManager.QueryResultListener() {
             @Override
             public void onQueryResult(List<DownloadStatus> list) {
-                Toast.makeText(getReactApplicationContext(), "Testing" + sourceMethod, Toast.LENGTH_LONG).show();
                 for (DownloadStatus status: list) {
                     if(status.mediaInfo.mediaId.equals(vdoInfo.getMediaId())){
                         caseDownloadStatus = status;
@@ -191,7 +190,11 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
         }
         if (videoIndices.size() > 0) {
             List<DownloadTrack> downloadTracks = new ArrayList<>();
-            for(int videoIndex: videoIndices) downloadTracks.add(new DownloadTrack(audioIndex, videoIndex));
+            for(int videoIndex: videoIndices) {
+                DownloadTrack downloadTrack = new DownloadTrack(audioIndex, videoIndex);
+                downloadTrack.setTrackName(downloadOptions);
+                downloadTracks.add(downloadTrack);
+            }
             return downloadTracks;
         }
 

@@ -3,10 +3,12 @@ package com.vdocipherdemo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.vdocipher.rnbridge.VdocipherRnBridgePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.vdocipherdemo.vdocipher.VdoCipherPackage;
 import com.vdocipherdemo.vdocipher_online.VdoCipherOnlinePackage;
 import com.vdocipherdemo.vdocipher_offline.VdoCipherOfflinePackage;
 
@@ -25,8 +27,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new VdocipherRnBridgePackage(),
               new VdoCipherOnlinePackage(),
-              new VdoCipherOfflinePackage()
+              new VdoCipherOfflinePackage(),
+              new VdoCipherPackage()
       );
     }
 
