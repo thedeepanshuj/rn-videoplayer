@@ -12,26 +12,13 @@ function getButtonText(mediaInfo) {
     }
 }
 
-const getButtonDisableStatus = (mediaInfo, state) => (mediaInfo.downloadStatus === STATUS_DOWNLOADING)
+const getButtonDisableStatus = (mediaInfo) => (mediaInfo.downloadStatus === STATUS_DOWNLOADING)
 
-const downloadMedia = async (mediaInfo, dispatch) => {
-    console.log("downloadMediaEntry");
+const downloadMedia = async (mediaInfo) => {
     VdoCipherOfflineModule.download(JSON.stringify(mediaInfo));
-    // VdoCipherModule.getDownloadOptions(JSON.stringify(mediaInfo))
-    //     .then(({downloadOptions, downloadTracks}) => {
-    //         console.log("downloadOptions", downloadOptions)
-    //     })
-    //     .catch((error) => {
-    //         console.log("error : ",error);
-    //         ToastAndroid.show(JSON.stringify(error), ToastAndroid.SHORT)
-    //     })
-
 };
 
 const deleteMedia = (mediaInfo) => {
-    console.log("delete :", mediaInfo)
-
-    // VdoCipherModule.delete();
     VdoCipherOfflineModule.delete(JSON.stringify(mediaInfo));
 };
 
