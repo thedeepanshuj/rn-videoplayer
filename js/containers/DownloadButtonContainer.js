@@ -32,7 +32,7 @@ const deleteMedia = (mediaInfo) => {
     console.log("delete :", mediaInfo)
 
     // VdoCipherModule.delete();
-    // NativeModules.VdoCipherOfflineModule.delete(JSON.stringify(mediaInfo));
+    VdoCipherOfflineModule.delete(JSON.stringify(mediaInfo));
 };
 
 function getOnClick(mediaInfo) {

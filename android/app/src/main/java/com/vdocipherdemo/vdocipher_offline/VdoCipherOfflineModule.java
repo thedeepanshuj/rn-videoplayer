@@ -4,13 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
 import com.vdocipher.aegis.media.ErrorDescription;
 import com.vdocipher.aegis.media.Track;
@@ -23,6 +28,7 @@ import com.vdocipher.aegis.offline.VdoDownloadManager;
 import com.vdocipherdemo.Constants;
 import com.vdocipherdemo.shared_components.vdo_player.PlayerActivity;
 import com.vdocipherdemo.shared_components.vdo_player.VdoInfo;
+import com.vdocipherdemo.vdocipher.DownloadEvents;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -242,7 +248,9 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
 
 
         // build a DownloadRequest
-        DownloadRequest request = new DownloadRequest.Builder(selections, downloadLocation).build();
+        DownloadRequest request = new DownloadRequest.Builder(selections, downloadLocation)
+                .setNotificationDescription(downloadOptions.mediaInfo.description)
+                .setNotificationTitle(downloadOptions.mediaInfo.title).build();
 
         // enqueue request to VdoDownloadManager for download
         try {
@@ -262,31 +270,55 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
 
 
     @Override
-    public void onQueued(String s, DownloadStatus downloadStatus) {
+    public void onQueued(String mediaId, DownloadStatus downloadStatus) {
         showToast(getReactApplicationContext(), "Queued");
+        WritableMap params = Arguments.createMap();
+        params.putString("mediaId", mediaId);
+        sendEvent(getReactApplicationContext(), DownloadEvents.QUEUED, params);
     }
 
     @Override
-    public void onChanged(String s, DownloadStatus downloadStatus) {
+    public void onChanged(String mediaId, DownloadStatus downloadStatus) {
         showToast(getReactApplicationContext(), "Downloading at " + downloadStatus.downloadPercent +" %");
+        WritableMap params = Arguments.createMap();
+        params.putString("mediaId", mediaId);
+        params.putInt("progress", downloadStatus.downloadPercent);
+        sendEvent(getReactApplicationContext(), DownloadEvents.PROGRESS, params);
     }
 
     @Override
-    public void onCompleted(String s, DownloadStatus downloadStatus) {
+    public void onCompleted(String mediaId, DownloadStatus downloadStatus) {
         showToast(getReactApplicationContext(), "Download Finished");
         vdoDownloadManager.removeEventListener(this);
         vdoDownloadManager = null;
+        WritableMap params = Arguments.createMap();
+        params.putString("mediaId", mediaId);
+        sendEvent(getReactApplicationContext(), DownloadEvents.COMPLETED, params);
     }
 
     @Override
-    public void onFailed(String s, DownloadStatus downloadStatus) {
+    public void onFailed(String mediaId, DownloadStatus downloadStatus) {
         showToast(getReactApplicationContext(), "Failed : " + downloadStatus.reason);
+        WritableMap params = Arguments.createMap();
+        params.putString("mediaId", mediaId);
+        params.putInt("reason", downloadStatus.reason);
+        sendEvent(getReactApplicationContext(), DownloadEvents.FAILED, params);
     }
 
     @Override
-    public void onDeleted(String s) {
+    public void onDeleted(String mediaId) {
         showToast(getReactApplicationContext(), "Deleted");
         vdoDownloadManager.removeEventListener(this);
         vdoDownloadManager = null;
+        WritableMap params = Arguments.createMap();
+        params.putString("mediaId", mediaId);
+        sendEvent(getReactApplicationContext(), DownloadEvents.DELETED, params);
+
+    }
+
+    private void sendEvent(ReactContext reactContext,
+                           String eventName,
+                           @Nullable WritableMap params) {
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 }

@@ -6,4 +6,5 @@ import {name as appName} from './app.json';
 import MessageQueue from "react-native/Libraries/BatchedBridge/MessageQueue";
 
 AppRegistry.registerComponent(appName, () => App);
+
 // MessageQueue.spy(true);
