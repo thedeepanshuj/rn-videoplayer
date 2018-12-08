@@ -1,40 +1,47 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Button, View, NativeModules} from 'react-native';
-import {sampleVdoInfo} from './constants/vdocipher';
-import {styles} from './styles';
 
+import React, {Component} from 'react';
+import {View, Text, DeviceEventEmitter} from 'react-native';
+import {styles} from './styles';
+import PlayButtonContainer from "./containers/PlayButtonContainer";
+import DownloadButtonContainer from "./containers/DownloadButtonContainer";
+import {applyMiddleware, compose, createStore} from "redux";
+import rootReducer from "./reducers";
+import {Provider} from "react-redux";
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistStore } from 'redux-persist'
+import initialState from "./constants/initialState";
+import {sampleVdoInfo} from "./constants/vdocipher";
+import eventListeners from "./event_listeners/EventListener";
+import {EVENT_COMPLETED, EVENT_DELETED, EVENT_FAILED, EVENT_PROGRESS, EVENT_QUEUED} from "./constants/DownloadEvents";
+import {deleteSuccess, downloadCompleted, downloadFailed, downloadProgress, downloadQueued} from "./actions";
+import {AsyncStorage} from "redux-persist";
+import logger from 'redux-logger'
 
 type Props = {};
 export default class App extends Component<Props> {
-  render() {
+
+    constructor(props) {
+
+        super(props);
+        this.store = createStore(rootReducer, initialState, compose(applyMiddleware(logger)));
+        this.persisted = persistStore(this.store, null, () => {this.store.getState() });
+        // eventListeners(this.store.dispatch, this.store.getState);
+    }
+
+    componentDidMount(): void {
+        eventListeners(this.store.dispatch)
+    }
+
+    render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.welcome}><Button title="Play Online" onPress={ () => playOnlineButtonClicked()}/></View>
-        <View style={styles.welcome}><Button title="Save Offline" onPress={ () => saveOfflineButtonClicked()}/></View>
-        <View style={styles.welcome}><Button title="Play Offline" onPress={ () => playOfflineButtonClicked()}/></View>
-        <View style={styles.welcome}><Button title="Delete" onPress={ () => deleteButtonClicked()}/></View>
-      </View>
+        <Provider store={this.store}>
+            <PersistGate loading={<Text>Loading...</Text>} persistor={this.persisted}>
+                <View style={styles.container}>
+                    <PlayButtonContainer mediaId={sampleVdoInfo.mediaId}/>
+                    <DownloadButtonContainer mediaId={sampleVdoInfo.mediaId}/>
+                </View>
+            </PersistGate>
+        </Provider>
     );
   }
 }
-
-function playOnlineButtonClicked(){
-  const vdoInfo = JSON.stringify(sampleVdoInfo);
-  NativeModules.VdoCipherOnlineModule.play(vdoInfo);
-}
-
-function saveOfflineButtonClicked() {
-    const vdoInfo = JSON.stringify(sampleVdoInfo);
-    NativeModules.VdoCipherOfflineModule.download(vdoInfo);
-}
-
-function playOfflineButtonClicked() {
-    const vdoInfo = JSON.stringify(sampleVdoInfo);
-    NativeModules.VdoCipherOfflineModule.play(vdoInfo);
-}
-
-function deleteButtonClicked() {
-    const vdoInfo = JSON.stringify(sampleVdoInfo);
-    NativeModules.VdoCipherOfflineModule.delete(vdoInfo);
-}
-

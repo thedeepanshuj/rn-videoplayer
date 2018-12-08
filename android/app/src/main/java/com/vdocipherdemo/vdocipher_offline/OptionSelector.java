@@ -61,7 +61,7 @@ public class OptionSelector implements AlertDialog.OnClickListener, View.OnClick
     }
 
     private void addOptionToView(DownloadTrack downloadTrack, LayoutInflater inflater, ViewGroup root, int selectableItemBackgroundResourceId) {
-        String optionText = downloadTrack.getTrackName(this.downloadOptions);
+        String optionText = downloadTrack.getTrackName();
         int trackViewLayoutId = android.R.layout.simple_list_item_single_choice;
         CheckedTextView trackView = (CheckedTextView) inflater.inflate(trackViewLayoutId, root, false);
         trackView.setBackgroundResource(selectableItemBackgroundResourceId);
