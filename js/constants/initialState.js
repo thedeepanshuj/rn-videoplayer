@@ -8,13 +8,6 @@ const initialState = {
             playbackInfo: "eyJ2aWRlb0lkIjoiM2YyOWI1NDM0YTVjNjE1Y2RhMThiMTZhNjIzMmZkNzUifQ==",
             downloadStatus: STATUS_NOT_DOWNLOADED
         }
-
-    },
-    dialog: {
-        visible: false,
-        downloadOptions: null,
-        downloadTracks: null,
-        selectedIndex: -1
     }
 };
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text} from 'react-native';
 import {styles} from './styles';
 import PlayButtonContainer from "./containers/PlayButtonContainer";
 import DownloadButtonContainer from "./containers/DownloadButtonContainer";
@@ -10,7 +10,6 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import initialState from "./constants/initialState";
 import {sampleVdoInfo} from "./constants/vdocipher";
-import DownloadDialogContainer from "./containers/DownloadDialogContainer";
 import eventListeners from "./event_listeners/EventListener";
 
 
@@ -32,7 +31,6 @@ export default class App extends Component<Props> {
                 <View style={styles.container}>
                     <PlayButtonContainer mediaId={sampleVdoInfo.mediaId}/>
                     <DownloadButtonContainer mediaId={sampleVdoInfo.mediaId}/>
-                    <DownloadDialogContainer/>
                 </View>
             </PersistGate>
         </Provider>

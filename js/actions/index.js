@@ -7,25 +7,6 @@ import {
     SHOW_DIALOG
 } from "../constants/actionTypes";
 
-export const showDialog = (options) => {
-
-    return {
-        type: SHOW_DIALOG,
-        payload: {...options }
-    }
-};
-
-export const hideDialog = () => {
-    return {type: HIDE_DIALOG}
-};
-
-export const dialogValueChange = (payload) => {
-    return {
-        type: DIALOG_VALUE_CHANGE,
-        payload: {...payload}
-    }
-}
-
 export const downloadQueued = (mediaId) => {
     return {
         type: DOWNLOAD_QUEUED,
