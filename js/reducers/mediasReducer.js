@@ -3,7 +3,6 @@ import {STATUS_DOWNLOADED, STATUS_DOWNLOADING, STATUS_NOT_DOWNLOADED} from "../c
 import {REHYDRATE} from "redux-persist";
 
 export const mediasReducer = (state = {}, action) => {
-    console.log("action", action.type, action.payload);
     let mediaId = null;
     switch (action.type) {
         case DOWNLOAD_QUEUED:
