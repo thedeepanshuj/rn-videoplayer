@@ -329,7 +329,6 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
     @Override
     public void onDeleted(String mediaId) {
         Context context = getReactApplicationContext();
-        showNotification(context, vdoInfo.getVdoId(), notificationBuilder, "Video Deleted", vdoInfo.getName(), null);
         showToast(context, "Deleted");
         vdoDownloadManager.removeEventListener(this);
         vdoDownloadManager = null;
