@@ -1,11 +1,14 @@
 package com.vdocipherdemo.vdocipher_offline;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,8 +29,9 @@ import com.vdocipher.aegis.offline.DownloadStatus;
 import com.vdocipher.aegis.offline.OptionsDownloader;
 import com.vdocipher.aegis.offline.VdoDownloadManager;
 import com.vdocipherdemo.Constants;
+import com.vdocipherdemo.R;
 import com.vdocipherdemo.shared_components.vdo_player.PlayerActivity;
-import com.vdocipherdemo.shared_components.vdo_player.VdoInfo;
+import com.vdocipherdemo.shared_components.VdoInfo;
 import com.vdocipherdemo.vdocipher.DownloadEvents;
 
 import java.io.File;
@@ -42,14 +46,20 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
     private static final int METHOD_DOWNLOAD = 1;
     private static final int METHOD_PLAY = 2;
     private static final int METHOD_DELETE = 3;
+    private static final int PROGRESS_MAX = 100;
 
     private VdoDownloadManager vdoDownloadManager;
     private boolean isVdoDownloaded = false;
     private boolean isDownloading = false;
     private DownloadStatus caseDownloadStatus = null;
     private VdoInfo vdoInfo;
+
+    NotificationCompat.Builder notificationBuilder = null;
+    NotificationChannel notificationChannel = null;
+
     public VdoCipherOfflineModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { initNotificationChannel(); }
     }
 
     @Override
@@ -60,10 +70,11 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
     @ReactMethod
     public void delete(String vdoInfoString) {
         vdoInfo = new Gson().fromJson(vdoInfoString, VdoInfo.class);
+        if (isSupportedSDK()) {
 
-        if (isSupportedSDK())
             initVdoCipherAttributes(METHOD_DELETE);
-        else
+            initNotificationBuilder(getReactApplicationContext());
+        } else
             showToast(getReactApplicationContext(),"Minimum api level required is 21");
     }
 
@@ -80,9 +91,10 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
     @ReactMethod
     public void download(String vdoInfoString){
         vdoInfo = new Gson().fromJson(vdoInfoString, VdoInfo.class);
-        if (isSupportedSDK())
+        if (isSupportedSDK()) {
             initVdoCipherAttributes(METHOD_DOWNLOAD);
-        else
+            initNotificationBuilder(getReactApplicationContext());
+        } else
             showToast(getReactApplicationContext(),"Minimum api level required is 21");
     }
 
@@ -230,7 +242,7 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
 
         String downloadLocation;
         try {
-            downloadLocation = getReactApplicationContext().getExternalFilesDir(null).getPath() + File.separator + "offline";
+            downloadLocation = getReactApplicationContext().getExternalFilesDir(null).getPath() + File.separator + vdoInfo.getVdoId();
         } catch (NullPointerException npe) {
             Toast.makeText(getReactApplicationContext(), "external storage not available", Toast.LENGTH_LONG).show();
             return;
@@ -266,12 +278,14 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
     }
 
     private boolean isSupportedSDK() { return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP; }
-    private void showToast(Context context, String message) { Toast.makeText(context, message, Toast.LENGTH_SHORT).show(); }
 
+    private void showToast(Context context, String message) { Toast.makeText(context, message, Toast.LENGTH_SHORT).show(); }
 
     @Override
     public void onQueued(String mediaId, DownloadStatus downloadStatus) {
-        showToast(getReactApplicationContext(), "Queued");
+        Context context = getReactApplicationContext();
+        showNotification(context, vdoInfo.getVdoId(), notificationBuilder, "Download Queued", vdoInfo.getName(), null);
+        showToast(context, "Queued");
         WritableMap params = Arguments.createMap();
         params.putString("mediaId", mediaId);
         sendEvent(getReactApplicationContext(), DownloadEvents.QUEUED, params);
@@ -279,7 +293,10 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
 
     @Override
     public void onChanged(String mediaId, DownloadStatus downloadStatus) {
-        showToast(getReactApplicationContext(), "Downloading at " + downloadStatus.downloadPercent +" %");
+        Context context = getReactApplicationContext();
+        showNotification(context, vdoInfo.getVdoId(), notificationBuilder, "Downloading", vdoInfo.getName(), downloadStatus.downloadPercent);
+        showToast(context, "Downloading at " + downloadStatus.downloadPercent +" %");
+
         WritableMap params = Arguments.createMap();
         params.putString("mediaId", mediaId);
         params.putInt("progress", downloadStatus.downloadPercent);
@@ -288,7 +305,9 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
 
     @Override
     public void onCompleted(String mediaId, DownloadStatus downloadStatus) {
-        showToast(getReactApplicationContext(), "Download Finished");
+        Context context = getReactApplicationContext();
+        showNotification(context, vdoInfo.getVdoId(), notificationBuilder, "Download Completed", vdoInfo.getName(), null);
+        showToast(context, "Download Finished");
         vdoDownloadManager.removeEventListener(this);
         vdoDownloadManager = null;
         WritableMap params = Arguments.createMap();
@@ -298,7 +317,9 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
 
     @Override
     public void onFailed(String mediaId, DownloadStatus downloadStatus) {
-        showToast(getReactApplicationContext(), "Failed : " + downloadStatus.reason);
+        Context context = getReactApplicationContext();
+        showNotification(context, vdoInfo.getVdoId(), notificationBuilder, "Download Failed", vdoInfo.getName(), null);
+        showToast(context, "Failed : " + downloadStatus.reason);
         WritableMap params = Arguments.createMap();
         params.putString("mediaId", mediaId);
         params.putInt("reason", downloadStatus.reason);
@@ -307,7 +328,9 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
 
     @Override
     public void onDeleted(String mediaId) {
-        showToast(getReactApplicationContext(), "Deleted");
+        Context context = getReactApplicationContext();
+        showNotification(context, vdoInfo.getVdoId(), notificationBuilder, "Video Deleted", vdoInfo.getName(), null);
+        showToast(context, "Deleted");
         vdoDownloadManager.removeEventListener(this);
         vdoDownloadManager = null;
         WritableMap params = Arguments.createMap();
@@ -321,4 +344,37 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
                            @Nullable WritableMap params) {
         reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
+
+    private void initNotificationBuilder(Context context){
+        if (notificationBuilder == null) notificationBuilder = new NotificationCompat.Builder(context, "default").setSmallIcon(R.drawable.logo_thumb);
+    }
+
+    private void showNotification(Context context, int notificationId, NotificationCompat.Builder notificationBuilder, String contentTitle, String contextText, Integer progress){
+
+        initNotificationBuilder(context);
+
+        notificationBuilder.setContentTitle(contentTitle).setContentText(contextText);
+        if (progress == null)
+            notificationBuilder.setProgress(0, 0, false);
+        else
+            notificationBuilder.setProgress(PROGRESS_MAX, progress, false);
+
+
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            initNotificationChannel();
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        
+        notificationManager.notify(notificationId, notificationBuilder.build());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void initNotificationChannel() {
+        notificationChannel = new NotificationChannel("default", "DownloadStatus", NotificationManager.IMPORTANCE_DEFAULT);
+    }
+
 }

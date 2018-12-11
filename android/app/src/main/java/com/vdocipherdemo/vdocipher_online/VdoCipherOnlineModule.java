@@ -1,20 +1,14 @@
 package com.vdocipherdemo.vdocipher_online;
 
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.vdocipherdemo.Constants;
 import com.vdocipherdemo.shared_components.vdo_player.PlayerActivity;
-import com.vdocipherdemo.shared_components.vdo_player.VdoInfo;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.vdocipherdemo.shared_components.VdoInfo;
 
 public class VdoCipherOnlineModule extends ReactContextBaseJavaModule {
 

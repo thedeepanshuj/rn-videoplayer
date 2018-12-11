@@ -25,7 +25,7 @@ import com.vdocipher.aegis.offline.DownloadStatus;
 import com.vdocipher.aegis.offline.OptionsDownloader;
 import com.vdocipher.aegis.offline.VdoDownloadManager;
 import com.vdocipherdemo.Utils;
-import com.vdocipherdemo.shared_components.vdo_player.VdoInfo;
+import com.vdocipherdemo.shared_components.VdoInfo;
 import com.vdocipherdemo.vdocipher_offline.DownloadTrack;
 
 import org.json.JSONException;

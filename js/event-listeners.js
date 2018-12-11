@@ -1,6 +1,6 @@
 import { DeviceEventEmitter } from 'react-native';
-import {EVENT_COMPLETED, EVENT_DELETED, EVENT_FAILED, EVENT_PROGRESS, EVENT_QUEUED} from "../constants/DownloadEvents";
-import {deleteSuccess, downloadCompleted, downloadFailed, downloadProgress, downloadQueued} from "../actions";
+import {EVENT_COMPLETED, EVENT_DELETED, EVENT_FAILED, EVENT_PROGRESS, EVENT_QUEUED} from "./constants/DownloadEvents";
+import {deleteSuccess, downloadCompleted, downloadFailed, downloadProgress, downloadQueued} from "./actions";
 
 const eventListeners = (dispatch) => {
 
