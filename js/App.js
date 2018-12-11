@@ -11,10 +11,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import initialState from "./constants/initialState";
 import {sampleVdoInfo} from "./constants/vdocipher";
-import eventListeners from "./event_listeners/EventListener";
-import {EVENT_COMPLETED, EVENT_DELETED, EVENT_FAILED, EVENT_PROGRESS, EVENT_QUEUED} from "./constants/DownloadEvents";
-import {deleteSuccess, downloadCompleted, downloadFailed, downloadProgress, downloadQueued} from "./actions";
-import {AsyncStorage} from "redux-persist";
+import eventListeners from "./event-listeners";
 import logger from 'redux-logger'
 
 type Props = {};

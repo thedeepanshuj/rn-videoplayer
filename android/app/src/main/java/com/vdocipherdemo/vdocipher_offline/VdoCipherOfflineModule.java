@@ -242,7 +242,7 @@ public class VdoCipherOfflineModule extends ReactContextBaseJavaModule implement
 
         String downloadLocation;
         try {
-            downloadLocation = getReactApplicationContext().getExternalFilesDir(null).getPath() + File.separator + vdoInfo.getVdoId();
+            downloadLocation = getReactApplicationContext().getExternalFilesDir(null).getPath() + File.separator + "offline";
         } catch (NullPointerException npe) {
             Toast.makeText(getReactApplicationContext(), "external storage not available", Toast.LENGTH_LONG).show();
             return;
